@@ -498,7 +498,7 @@ class WaveNetModel(object):
             network_input = tf.reshape(
                      tf.cast(input_batch, tf.float32),
                      [self.batch_size, -1, self.skeleton_channels])
-            #raw_output = self._create_network(network_input)
+            #raw_output = self._create_network(network_input)-
             prediction = self._create_network(network_input)
             with tf.name_scope('loss'):
                 # Shift original input left by one sample, which means that
@@ -518,10 +518,12 @@ class WaveNetModel(object):
                 diff = prediction - gt
                 #diff = tf.Print(diff, [diff], message='Value of diff')
                 #diff = tf.Print(diff, [tf.shape(diff)], message='Shape of diff')
+                #output = sum(t ** 2) / 2
                 loss = tf.nn.l2_loss(diff)
                 #reduced_loss = tf.reduce_mean(loss)
-                #reduced_loss = loss / self.batch_size / tf.shape(network_input)[1]
-                reduced_loss = loss
+                reduced_loss = loss / self.batch_size
+                reduced_loss = reduced_loss / tf.cast(tf.shape(network_input)[1], tf.float32)
+                #reduced_loss = loss
                 tf.scalar_summary('loss', reduced_loss)
 
                 if l2_regularization_strength is None:
