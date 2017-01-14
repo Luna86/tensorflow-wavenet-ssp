@@ -1,0 +1,1 @@
+python generate_copy.py --wav_out_path=waveout/wavenet_generated.mat --samples 16000 /home/luna/ssp/model/tensorflow-wavenet/logdir/train/2016-12-30T14-22-43/model.ckpt-46200
