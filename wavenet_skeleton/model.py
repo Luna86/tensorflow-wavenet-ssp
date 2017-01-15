@@ -524,8 +524,9 @@ class WaveNetModel(object):
                 reduced_loss = loss / self.batch_size
                 reduced_loss = reduced_loss / tf.cast(tf.shape(network_input)[1], tf.float32)
                 #reduced_loss = loss
-                tf.scalar_summary('loss', reduced_loss)
+                #tf.scalar_summary('loss', reduced_loss)
 
+                tf.summary.scalar('loss', reduced_loss)
                 if l2_regularization_strength is None:
                     return reduced_loss
                 else:

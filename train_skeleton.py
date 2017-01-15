@@ -238,10 +238,10 @@ def main():
     #todo: finishing set up symbolic computation graph.
 
     # Set up logging for TensorBoard.
-    writer = tf.train.SummaryWriter(logdir)
+    writer = tf.summary.FileWriter(logdir)
     writer.add_graph(tf.get_default_graph())
     run_metadata = tf.RunMetadata()
-    summaries = tf.merge_all_summaries()
+    summaries = tf.summary.merge_all()
 
     #todo: set up tensorflow session and sess.run(init)
     # Set up session

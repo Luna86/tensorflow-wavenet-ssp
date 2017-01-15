@@ -5,7 +5,7 @@
                   1, 2, 4, 8, 16, 32,
                   1, 2, 4, 8, 16, 32,
                   1, 2, 4, 8, 16, 32],
-    "residual_channels": 32,
+    "residual_channels": 128,
     "dilation_channels": 32,
     "skip_channels": 512,
     "use_biases": true,

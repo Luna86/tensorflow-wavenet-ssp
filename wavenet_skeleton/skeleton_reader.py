@@ -1,9 +1,7 @@
 import fnmatch
 import os
-import re
 import threading
 
-import librosa
 import numpy as np
 import tensorflow as tf
 
