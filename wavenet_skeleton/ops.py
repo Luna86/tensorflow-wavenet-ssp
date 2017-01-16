@@ -3,9 +3,9 @@ from __future__ import division
 import tensorflow as tf
 
 #the epsilon for adam is tunable
-def create_adam_optimizer(learning_rate, momentum):
+def create_adam_optimizer(learning_rate, momentum, epsilon):
     return tf.train.AdamOptimizer(learning_rate=learning_rate,
-                                  epsilon=0.1)
+                                  epsilon=epsilon)
 
 
 def create_sgd_optimizer(learning_rate, momentum):

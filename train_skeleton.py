@@ -89,6 +89,8 @@ def get_arguments():
                         default=MOMENTUM, help='Specify the momentum to be '
                         'used by sgd or rmsprop optimizer. Ignored by the '
                         'adam optimizer.')
+    parser.add_argument('--epsilon', type=float,
+			default=1e-8, help='Specify the epsilon to be used by adam optimizer')
     parser.add_argument('--histograms', type=_str_to_bool, default=False,
                          help='Whether to store histogram summaries.')
     return parser.parse_args()
@@ -224,7 +226,7 @@ def main():
     loss = net.loss(skeleton_batch, args.l2_regularization_strength)
     optimizer = optimizer_factory[args.optimizer](
                     learning_rate=args.learning_rate,
-                    momentum=args.momentum)
+                    momentum=args.momentum, epsilon=args.epsilon)
     trainable = tf.trainable_variables()
     total_parameters = 0
     for variable in trainable:
