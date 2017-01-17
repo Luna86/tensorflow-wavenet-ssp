@@ -187,10 +187,12 @@ def main():
 
         #save result in .mat file
         if args.skeleton_out_path:
-            outdir = os.path.join('logdir','skeleton_generate_1-12', os.path.basename(os.path.dirname(args.checkpoint)) + os.path.basename(args.checkpoint)+'window'+str(args.window)+'sample'+str(args.samples))
+            #outdir = os.path.join('logdir','skeleton_generate', os.path.basename(os.path.dirname(args.checkpoint)) + os.path.basename(args.checkpoint)+'window'+str(args.window)+'sample'+str(args.samples))
+            outdir = os.path.join(args.skeleton_out_path, os.path.basename(os.path.dirname(args.checkpoint)))
             if not os.path.exists(outdir):
                 os.makedirs(outdir)
-            filedir = os.path.join(outdir, (sub+args.skeleton_out_path))
+            filedir = os.path.join(outdir, str(sub)+'.mat')
+            #filedir = os.path.join(outdir, (sub+args.skeleton_out_path))
             sio.savemat(filedir, {'wavenet_predict': motion, 'gt': gt})
             #out = sess.run(decode, feed_dict={samples: motion})
             #todo: write skeleton writer
