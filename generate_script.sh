@@ -12,7 +12,7 @@ for dir in $dirlist
 do
 	posedir=$datadir$dir
 	#python generate_skeleton.py --wavenet_params=wavenet_params1.json --samples=100 --window=500 --skeleton_out_path=wavenet_generated.mat --motion_seed=$posedir /home/luna/ssp/model/tensorflow-wavenet-ssp/logdir-server6/train/2017-01-15T07-10-00/model.ckpt-64999.data-00000-of-00001
-        python generate_skeleton.py --wavenet_params=$params --samples=100 --window=100 --skeleton_out_path=$generatedir --motion_seed=$posedir $modeldir$timestamp$ckpt
+        CUDA_VISIBLE_DEVICES=0 python generate_skeleton.py --wavenet_params=$params --samples=100 --window=100 --skeleton_out_path=$generatedir --motion_seed=$posedir $modeldir$timestamp$ckpt
 done
 
 
