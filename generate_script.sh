@@ -1,15 +1,19 @@
 #!/bin/bash
-datadir='/luna/data/pose/generate/'
+# pass in two arguments, arg1: timestamp of model, arg2: wavenet_params file used by the model. Fix sample/window size to 100/100 by now. 
+modeldir='/home/lunay/tensorflow-wavenet_ssp/logdir/train/'
+datadir='/media/posefs1b/Users/hanbyulj/ssp-data/data_lunaForm/pose/generate/'
+generatedir='/media/posefs1b/Users/luna/wavenet/generate_skeleton_window100sample100/'
 dirlist=`ls $datadir`
+#modeldir='/posefs1b/Users/luna/wavenet/train/'
+timestamp=$1
+params=$2
+ckpt='/model.ckpt-64999'
 for dir in $dirlist
 do
 	posedir=$datadir$dir
-	#python generate_skeleton.py --samples=50 --window=100 --skeleton_out_path=wavenet_generated.mat --motion_seed=$posedir /home/luna/ssp/model/tensorflow-wavenet/logdir/train/2017-01-11T18-20-20/model.ckpt-64999
-	python generate_skeleton.py --wavenet_params=wavenet_params1.json --samples=50 --window=100 --skeleton_out_path=/posefs1b/Users/luna/wavenet/generate_skeleton_window100sample100 --motion_seed=$posedir /posefs1b/Users/luna/wavenet/train/2017-01-14T17-14-41/model.ckpt-64999
+	#python generate_skeleton.py --wavenet_params=wavenet_params1.json --samples=100 --window=500 --skeleton_out_path=wavenet_generated.mat --motion_seed=$posedir /home/luna/ssp/model/tensorflow-wavenet-ssp/logdir-server6/train/2017-01-15T07-10-00/model.ckpt-64999.data-00000-of-00001
+        python generate_skeleton.py --wavenet_params=$params --samples=100 --window=100 --skeleton_out_path=$generatedir --motion_seed=$posedir $modeldir$timestamp$ckpt
 done
-
-
-
 
 
 
