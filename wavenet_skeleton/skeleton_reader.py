@@ -79,13 +79,14 @@ class SkeletonReader(object):
                     #buffer_ = np.append(buffer_, skeleton)
                     while skeleton.shape[0] > self.sample_size:
                         #todo:  need to standardize the data and add root location
+			#default shift length = 25 frames
                         piece = skeleton[:self.sample_size,3:]
                         #print('shape of piece: {0}'.format(piece.shape))
                         #print('content of piece: \n{0}'.format(piece))
                         '''this is where data is fed into the queue for future fetch'''
                         if not np.isnan(np.sum(piece)):
                             sess.run(self.enqueue, feed_dict={self.sample_placeholder: piece})
-                        skeleton = skeleton[self.sample_size:,:]
+                        skeleton = skeleton[25:,:]
                 else:
                     if not np.isnan(np.sum(skeleton)):
                         sess.run(self.enqueue, feed_dict={self.sample_placeholder: skeleton})
