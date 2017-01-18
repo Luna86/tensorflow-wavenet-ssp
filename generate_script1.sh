@@ -1,6 +1,6 @@
 #!/bin/bash
 # pass in two arguments, arg1: timestamp of model, arg2: wavenet_params file used by the model. Fix sample/window size to 100/100 by now. 
-modeldir='/home/lunay/tensorflow-wavenet_ssp/logdir/train/'
+modeldir='/media/posefs1b/Users/luna/wavenet/train/'
 datadir='/media/posefs1b/Users/hanbyulj/ssp-data/data_lunaForm/pose/generate_shift1/'
 generatedir='/media/posefs1b/Users/luna/wavenet/generate_shift1_skeleton_window100sample100/'
 dirlist=`ls $datadir`
