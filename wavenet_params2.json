@@ -1,11 +1,6 @@
 {
     "filter_width": 2,
-    "dilations": [1, 2, 4, 8, 16, 32, 
-                  1, 2, 4, 8, 16, 32,
-                  1, 2, 4, 8, 16, 32,
-                  1, 2, 4, 8, 16, 32,
-                  1, 2, 4, 8, 16, 32,
-                  1, 2, 4, 8, 16, 32,
+    "dilations": [1, 2, 4, 8, 16, 32,
                   1, 2, 4, 8, 16, 32,
                   1, 2, 4, 8, 16, 32,
                   1, 2, 4, 8, 16, 32,
@@ -16,5 +11,5 @@
     "use_biases": true,
     "scalar_input": false,
     "initial_filter_width": 128,
-    "skeleton_channels": 42
+    "skeleton_channels": 45
 }
