@@ -2,4 +2,5 @@ logdir/
 VCTK-Corpus/
 *.pyc
 *script*
+script*
 wavenet_params*
