@@ -36,18 +36,28 @@ class SkeletonReader(object):
                  skeleton_dir,
                  coord,
                  sample_size=None,
-                 queue_size=256):
+                 queue_size=256,
+		 withRoot=0):
         self.skeleton_dir = skeleton_dir
         self.coord = coord
         self.sample_size = sample_size
         self.threads = []
+	self.withRoot = withRoot
+	if self.withRoot:
+		self.inputDim = 45
+	else:
+		self.inputDim = 42
         #sample placeholder shape in audio data = n x 1, where n is length of sample points in an audio fragment.
         #self.sample_placeholder = tf.placeholder(dtype=tf.float32, shape=None)
         #taking into one sample of size (T x 42), where T is unknown before time
         self.sample_placeholder = tf.placeholder(dtype=tf.float32, shape=None)
-        self.queue = tf.PaddingFIFOQueue(capacity=queue_size,
-                                         dtypes=['float32'],
-                                         shapes=[(None, 42)])
+        #self.queue = tf.PaddingFIFOQueue(capacity=queue_size,
+        #                                 dtypes=['float32'],
+        #                                 shapes=[(None, 42)])
+	self.queue = tf.RandomShuffleQueue(capacity=queue_size,
+					   min_after_dequeue=128,
+					   dtypes=['float32'],
+					   shapes=[self.sample_size, self.inputDim])
         self.enqueue = self.queue.enqueue([self.sample_placeholder])
 
         # TODO Find a better way to check this.
@@ -80,13 +90,14 @@ class SkeletonReader(object):
                     while skeleton.shape[0] > self.sample_size:
                         #todo:  need to standardize the data and add root location
 			#default shift length = 25 frames
-                        piece = skeleton[:self.sample_size,3:]
+                        piece = skeleton[:self.sample_size,45-self.inputDim:]
                         #print('shape of piece: {0}'.format(piece.shape))
                         #print('content of piece: \n{0}'.format(piece))
                         '''this is where data is fed into the queue for future fetch'''
                         if not np.isnan(np.sum(piece)):
                             sess.run(self.enqueue, feed_dict={self.sample_placeholder: piece})
                         skeleton = skeleton[25:,:]
+			#skeleton = skeleton[self.sample_size:,:]
                 else:
                     if not np.isnan(np.sum(skeleton)):
                         sess.run(self.enqueue, feed_dict={self.sample_placeholder: skeleton})

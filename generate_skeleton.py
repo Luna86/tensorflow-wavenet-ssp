@@ -97,6 +97,7 @@ def main():
 
     sess = tf.Session()
 
+    skeleton_channels = wavenet_params['skeleton_channels']
     net = WaveNetModel(
         batch_size=1,
         dilations=wavenet_params['dilations'],
@@ -106,10 +107,12 @@ def main():
         skip_channels=wavenet_params['skip_channels'],
         use_biases=wavenet_params['use_biases'],
         scalar_input=wavenet_params['scalar_input'],
-        initial_filter_width=wavenet_params['initial_filter_width'])
+        initial_filter_width=wavenet_params['initial_filter_width'],
+	skeleton_channels = skeleton_channels)
 
     samples = tf.placeholder(dtype=tf.float32)
     #todo: Q: how does samples represent T x 42 data? does predict_proba_incremental memorize? A: samples can store multiple frames. T x 42 dim
+
     if args.fast_generation:
         next_sample = net.predict_proba_incremental(samples)
     else:
@@ -126,11 +129,6 @@ def main():
 
     print('Restoring model from {}'.format(args.checkpoint))
     saver.restore(sess, args.checkpoint)
-
-    #decode = mu_law_decode(samples, wavenet_params['quantization_channels'])
-
-    #quantization_channels = wavenet_params['quantization_channels']
-
     if args.motion_seed:
         pass
     else:
@@ -141,7 +139,7 @@ def main():
         if np.isnan(np.sum(gt)):
             print('nan detected')
             continue
-        seed = tf.constant(gt[:cut_index,3:])
+        seed = tf.constant(gt[:cut_index,45-skeleton_channels:])
         #seed: T x 42 tensor
         #tolist() converts a tf tensor to a list
         motion = sess.run(seed).tolist()
@@ -154,7 +152,7 @@ def main():
             for i, x in enumerate(motion[-args.window: -1]):
                 if i % 10 == 0:
                     print('Priming sample {}'.format(i))
-                sess.run(outputs, feed_dict={samples: np.reshape(x, (1,42))})
+                sess.run(outputs, feed_dict={samples: np.reshape(x, (1,skeleton_channels))})
             print('Done.')
 
         last_sample_timestamp = datetime.now()
@@ -171,7 +169,7 @@ def main():
                 outputs = [next_sample]
 
             # Run the WaveNet to predict the next sample.
-            prediction = sess.run(outputs, feed_dict={samples: np.reshape(window,(1,42))})[0]
+            prediction = sess.run(outputs, feed_dict={samples: np.reshape(window,(1,skeleton_channels))})[0]
             #prediction = sess.run(outputs, feed_dict={samples: window})[0]
 
             motion.append(prediction)
