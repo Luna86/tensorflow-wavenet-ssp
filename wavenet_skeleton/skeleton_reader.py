@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 
-def find_files(directory, pattern='s*'):
+def find_files(directory, pattern='*'):
     '''Recursively finds all files matching the pattern.'''
     files = []
     for root, dirnames, filenames in os.walk(directory):
@@ -37,16 +37,12 @@ class SkeletonReader(object):
                  coord,
                  sample_size=None,
                  queue_size=256,
-		 withRoot=0):
+		 skeleton_channels=45):
         self.skeleton_dir = skeleton_dir
         self.coord = coord
         self.sample_size = sample_size
         self.threads = []
-	self.withRoot = withRoot
-	if self.withRoot:
-		self.inputDim = 45
-	else:
-		self.inputDim = 42
+	self.skeleton_channels = skeleton_channels
         #sample placeholder shape in audio data = n x 1, where n is length of sample points in an audio fragment.
         #self.sample_placeholder = tf.placeholder(dtype=tf.float32, shape=None)
         #taking into one sample of size (T x 42), where T is unknown before time
@@ -57,7 +53,7 @@ class SkeletonReader(object):
 	self.queue = tf.RandomShuffleQueue(capacity=queue_size,
 					   min_after_dequeue=128,
 					   dtypes=['float32'],
-					   shapes=[self.sample_size, self.inputDim])
+					   shapes=[self.sample_size, self.skeleton_channels])
         self.enqueue = self.queue.enqueue([self.sample_placeholder])
 
         # TODO Find a better way to check this.
@@ -90,7 +86,10 @@ class SkeletonReader(object):
                     while skeleton.shape[0] > self.sample_size:
                         #todo:  need to standardize the data and add root location
 			#default shift length = 25 frames
-                        piece = skeleton[:self.sample_size,45-self.inputDim:]
+                        if self.skeleton_channels==42 or self.skeleton_channels==45:
+				piece = skeleton[:self.sample_size,45-self.skeleton_channels:]
+			else:
+				piece = skeleton[:self.sample_size, :]
                         #print('shape of piece: {0}'.format(piece.shape))
                         #print('content of piece: \n{0}'.format(piece))
                         '''this is where data is fed into the queue for future fetch'''

@@ -11,5 +11,5 @@
     "use_biases": true,
     "scalar_input": false,
     "initial_filter_width": 128,
-    "skeleton_channels": 42
+    "skeleton_channels": 46
 }

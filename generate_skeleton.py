@@ -139,7 +139,10 @@ def main():
         if np.isnan(np.sum(gt)):
             print('nan detected')
             continue
-        seed = tf.constant(gt[:cut_index,45-skeleton_channels:])
+	if skeleton_channels == 45 or skeleton_channels==42:
+        	seed = tf.constant(gt[:cut_index,45-skeleton_channels:])
+	else:
+		seed = tf.constant(gt[:cut_index, :])
         #seed: T x 42 tensor
         #tolist() converts a tf tensor to a list
         motion = sess.run(seed).tolist()

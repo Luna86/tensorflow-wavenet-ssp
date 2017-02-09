@@ -43,8 +43,6 @@ def get_arguments():
 
 
     parser = argparse.ArgumentParser(description='WaveNet example network')
-    parser.add_argument('--withRoot', type=bool, default=False,
-			help='Training with root or not')
     parser.add_argument('--batch_size', type=int, default=BATCH_SIZE,
                         help='How many wav files to process at once.')
     parser.add_argument('--data_dir', type=str, default=DATA_DIRECTORY,
@@ -207,7 +205,7 @@ def main():
             args.data_dir,
             coord,
             sample_size=args.sample_size,
-            withRoot = args.withRoot)
+            skeleton_channels = wavenet_params["skeleton_channels"])
         skeleton_batch = reader.dequeue(args.batch_size)
 
     # Create network.
